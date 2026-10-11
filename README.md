@@ -41,6 +41,20 @@ The files hold only hashes, counts, timestamps and signatures. No names, no acco
 fields above, verifies the signature and the ordering, and commits `heads/<date>.json`. It uses no secrets: only public URLs and the
 workflow's own `GITHUB_TOKEN`.
 
+## Bitcoin timestamps (OpenTimestamps)
+
+Each day the workflow also runs `ots stamp heads/<date>.json`, which writes `heads/<date>.json.ots`. Only the SHA-256 digest of the
+head file leaves the runner, sent to the public OpenTimestamps calendars; the calendars commit it into a Bitcoin transaction.
+A new proof is pending for a few hours; later runs call `ots upgrade` until the proof carries a Bitcoin block attestation.
+
+Verify one yourself (needs `pip install opentimestamps-client` and, for full verification, a Bitcoin node or a block explorer):
+
+    ots info heads/2026-10-11.json.ots
+    ots verify heads/2026-10-11.json.ots
+
+This is a timestamp, nothing more: there is no token, no wallet and no on-chain credit. Credit for contributions stays in KarmaDue's
+signed log; the Bitcoin anchor only proves the log head existed by a given block.
+
 ## Limits
 
 An anchor proves the log had this head on this date and was not rewritten afterwards. It does not prove any event is true, and it

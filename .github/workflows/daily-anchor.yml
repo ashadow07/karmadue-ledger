@@ -15,7 +15,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install cryptography==43.0.3
+      - run: pip install cryptography==43.0.3 opentimestamps-client==0.7.2
       - name: Fetch today's head (only hashes, counts, timestamps, signatures)
         run: |
           curl -fsS https://ogogoizwsfaduzehkshb.supabase.co/functions/v1/public-api/.well-known/kd-log-head.json -o /tmp/head.json
@@ -32,12 +32,21 @@ jobs:
           DAY=$(cat /tmp/day)
           python3 scripts/verify_head.py "heads/$DAY.json"
           python3 scripts/check_order.py
+      - name: Bitcoin timestamp (OpenTimestamps, hash only)
+        # ots sends only a SHA-256 digest of the head file (plus a random nonce) to public OpenTimestamps calendars.
+        # The head file itself holds only hashes, counts, timestamps and signatures. No token, no on-chain credit, no wallet.
+        run: |
+          DAY=$(cat /tmp/day)
+          if [ ! -f "heads/$DAY.json.ots" ]; then ots stamp "heads/$DAY.json" || echo "ots stamp failed for $DAY; will retry next run"; fi
+          # Earlier proofs start as calendar promises and gain a Bitcoin block attestation after a few hours.
+          for f in heads/*.ots; do [ -f "$f" ] && (ots upgrade "$f" || true); done
+          rm -f heads/*.ots.bak
       - name: Commit
         run: |
           DAY=$(cat /tmp/day)
           git config user.name "karmadue-ledger-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "heads/$DAY.json"
+          git add "heads/$DAY.json" heads/*.ots 2>/dev/null || git add "heads/$DAY.json"
           if git diff --cached --quiet; then echo "No change for $DAY"; exit 0; fi
-          git commit -m "anchor $DAY"
+          git commit -m "anchor $DAY (+ OpenTimestamps proofs)"
           git push
