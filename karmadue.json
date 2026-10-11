@@ -1,0 +1,36 @@
+{
+  "$schema": "https://karmadue.expo.app/schema/karmadue.v0.json",
+  "karmadue": "0",
+  "subject": {
+    "type": "repo",
+    "name": "karmadue-ledger",
+    "repository": "https://github.com/ashadow07/karmadue-ledger",
+    "homepage": "https://github.com/ashadow07/karmadue-ledger"
+  },
+  "publisher": {
+    "name": "KarmaDue",
+    "domain": "karmadue.expo.app",
+    "securityContact": "https://karmadue.expo.app/.well-known/security.txt"
+  },
+  "capabilities": {
+    "tools": [
+      { "name": "scripts/verify_head.py", "description": "Checks a daily head's Ed25519 signature against kd-passport-1 from https://karmadue.expo.app/.well-known/jwks.json." },
+      { "name": "scripts/check_order.py", "description": "Checks that seq never goes down across heads/." }
+    ],
+    "permissions": [
+      "contents:write (daily-anchor workflow only, to commit heads/YYYY-MM-DD.json)",
+      "id-token:write (scorecard workflow only, to publish OpenSSF Scorecard results)"
+    ],
+    "network": { "access": "allowlist", "domains": ["ogogoizwsfaduzehkshb.supabase.co", "karmadue.expo.app", "pypi.org", "files.pythonhosted.org"] },
+    "filesystem": { "access": "read-write", "paths": ["heads/"] },
+    "payments": { "access": "none" },
+    "autonomyLevel": "L0",
+    "humanApprovalRequiredFor": ["changes to scripts and workflows (made only by the repository owner)"]
+  },
+  "policies": {
+    "security": "https://karmadue.expo.app/docs/security.md",
+    "retention": "Append-only. Each daily anchor (hashes, counts, timestamps, signatures; no personal data) is kept indefinitely.",
+    "trainsOnUserData": false
+  },
+  "passport": "https://karmadue.expo.app/passport/kd:res:github:ashadow07/karmadue-ledger"
+}
