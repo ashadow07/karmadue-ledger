@@ -1,0 +1,30 @@
+{
+ "decoder": {
+  "name": "ffmpeg",
+  "version": "7.1.5-0+deb13u1"
+ },
+ "transcription": {
+  "name": "pywhispercpp",
+  "version": "1.5.1",
+  "model": "ggml-small.en-q5_1.bin",
+  "model_sha256": "bfdff4894dcb76bbf647d56263ea2a96645423f1669176f4844a1bf8e478ad30"
+ },
+ "diarization": {
+  "name": "sherpa-onnx",
+  "version": "1.13.8",
+  "onnxruntime": "1.31.0",
+  "segmentation_sha256": "220ad67ca923bef2fa91f2390c786097bf305bceb5e261d4af67b38e938e1079",
+  "embedding_sha256": "1a331345f04805badbb495c775a6ddffcdd1a732567d5ec8b3d5749e3c7a5e4b"
+ },
+ "summary": {
+  "name": "llama-cpp-python",
+  "version": "0.3.36",
+  "model": "qwen2.5-1.5b-instruct-q4_k_m.gguf",
+  "model_sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e"
+ },
+ "runtime": {
+  "python": "3.13",
+  "os": "linux",
+  "arch": "x86_64"
+ }
+}

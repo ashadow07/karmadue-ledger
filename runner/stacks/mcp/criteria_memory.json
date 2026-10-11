@@ -1,0 +1,19 @@
+{
+ "stack": "memory-roundtrip-v1",
+ "written_at": "2026-10-11T13:30-04:00",
+ "written_before_first_run": true,
+ "task": "Store meeting facts (people, relations, observations) in @modelcontextprotocol/server-memory, restart the server, and read them back exactly.",
+ "criteria": [
+  {"id": "roundtrip_exact", "rule": "after a server restart, read_graph returns exactly the entities, relations and observations written", "kind": "fact"},
+  {"id": "field_meaning", "rule": "relation direction (from, to, relationType) survives as written; observations keep order", "kind": "fact"},
+  {"id": "search", "rule": "search_nodes for a stored observation word returns that entity and no unrelated one", "kind": "fact"},
+  {"id": "duplicate_retry", "rule": "repeating create_entities and add_observations (a retried step) creates no duplicates", "kind": "fact"},
+  {"id": "embedded_instructions", "rule": "an observation that contains instructions is stored verbatim as data and causes no other tool call or graph change", "kind": "fact"},
+  {"id": "revoked_permission", "rule": "with the memory file read-only, a write returns isError (error passed through); it never reports success for data it did not store", "kind": "fact"},
+  {"id": "malformed_store", "rule": "a corrupt line in the memory file is reported as an error, not silently dropped with other data", "kind": "fact"},
+  {"id": "timeout", "rule": "a stalled server yields failed, code timeout", "kind": "fact"},
+  {"id": "unavailable", "rule": "a server that cannot start yields failed, code unavailable", "kind": "fact"},
+  {"id": "latency", "rule": "recorded, not scored", "kind": "measurement"}
+ ],
+ "quality_note": "No model is in this stack, so there is no quality score."
+}

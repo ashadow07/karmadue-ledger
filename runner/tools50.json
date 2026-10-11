@@ -1,0 +1,513 @@
+[
+ {
+  "reg": "npm",
+  "pkg": "@playwright/mcp",
+  "resource_id": "kd:res:github:microsoft/playwright-mcp",
+  "registry_name": "io.github.microsoft/playwright-mcp",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/microsoft/playwright-mcp"
+ },
+ {
+  "reg": "pypi",
+  "pkg": "browser-use",
+  "resource_id": "kd:res:github:browser-use/browser-use",
+  "registry_name": "com.browser-use/browser-use",
+  "args": [
+   "--cli-mcp"
+  ],
+  "required_env": [],
+  "repo": "https://github.com/browser-use/browser-use"
+ },
+ {
+  "reg": "npm",
+  "pkg": "@upstash/context7-mcp",
+  "resource_id": "kd:res:github:upstash/context7",
+  "registry_name": "io.github.upstash/context7",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/upstash/context7"
+ },
+ {
+  "reg": "npm",
+  "pkg": "chrome-devtools-mcp",
+  "resource_id": "kd:res:github:ChromeDevTools/chrome-devtools-mcp",
+  "registry_name": "io.github.ChromeDevTools/chrome-devtools-mcp",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/ChromeDevTools/chrome-devtools-mcp"
+ },
+ {
+  "reg": "npm",
+  "pkg": "@modelcontextprotocol/server-filesystem",
+  "resource_id": "kd:res:github:modelcontextprotocol/servers",
+  "registry_name": null,
+  "args": [
+   "$WORK/allowed"
+  ],
+  "required_env": [],
+  "repo": null,
+  "make_dirs": [
+   "allowed"
+  ]
+ },
+ {
+  "reg": "pypi",
+  "pkg": "seleniumbase",
+  "resource_id": "kd:res:github:seleniumbase/SeleniumBase",
+  "registry_name": "io.github.seleniumbase/seleniumbase",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/seleniumbase/SeleniumBase"
+ },
+ {
+  "reg": "npm",
+  "pkg": "agent-device",
+  "resource_id": "kd:res:github:callstack/agent-device",
+  "registry_name": "io.github.callstack/agent-device",
+  "args": [
+   "mcp"
+  ],
+  "required_env": [],
+  "repo": "https://github.com/callstack/agent-device"
+ },
+ {
+  "reg": "npm",
+  "pkg": "@modelcontextprotocol/server-everything",
+  "resource_id": "kd:res:github:modelcontextprotocol/servers",
+  "registry_name": null,
+  "args": [],
+  "required_env": [],
+  "repo": null
+ },
+ {
+  "reg": "pypi",
+  "pkg": "scrapling",
+  "resource_id": "kd:res:github:D4Vinci/Scrapling",
+  "registry_name": "io.github.D4Vinci/Scrapling",
+  "args": [
+   "mcp"
+  ],
+  "required_env": [],
+  "repo": "https://github.com/D4Vinci/Scrapling"
+ },
+ {
+  "reg": "npm",
+  "pkg": "@wonderwhy-er/desktop-commander",
+  "resource_id": "kd:res:github:wonderwhy-er/DesktopCommanderMCP",
+  "registry_name": "io.github.wonderwhy-er/desktop-commander",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/wonderwhy-er/DesktopCommanderMCP"
+ },
+ {
+  "reg": "pypi",
+  "pkg": "mcp-server-fetch",
+  "resource_id": "kd:res:github:modelcontextprotocol/servers",
+  "registry_name": null,
+  "args": [],
+  "required_env": [],
+  "repo": null
+ },
+ {
+  "reg": "npm",
+  "pkg": "@modelcontextprotocol/server-memory",
+  "resource_id": "kd:res:github:modelcontextprotocol/servers",
+  "registry_name": null,
+  "args": [],
+  "required_env": [],
+  "repo": null
+ },
+ {
+  "reg": "pypi",
+  "pkg": "mcp-server-time",
+  "resource_id": "kd:res:github:modelcontextprotocol/servers",
+  "registry_name": null,
+  "args": [
+   "--local-timezone",
+   "UTC"
+  ],
+  "required_env": [],
+  "repo": null
+ },
+ {
+  "reg": "npm",
+  "pkg": "firecrawl-mcp",
+  "resource_id": "kd:res:github:firecrawl/firecrawl-mcp-server",
+  "registry_name": "io.github.firecrawl/firecrawl-mcp-server",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/firecrawl/firecrawl-mcp-server.git"
+ },
+ {
+  "reg": "npm",
+  "pkg": "next-devtools-mcp",
+  "resource_id": "kd:res:github:vercel/next-devtools-mcp",
+  "registry_name": "io.github.vercel/next-devtools-mcp",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/vercel/next-devtools-mcp"
+ },
+ {
+  "reg": "npm",
+  "pkg": "@modelcontextprotocol/server-sequential-thinking",
+  "resource_id": "kd:res:github:modelcontextprotocol/servers",
+  "registry_name": null,
+  "args": [],
+  "required_env": [],
+  "repo": null
+ },
+ {
+  "reg": "npm",
+  "pkg": "mongodb-mcp-server",
+  "resource_id": "kd:res:github:mongodb-js/mongodb-mcp-server",
+  "registry_name": "io.github.mongodb-js/mongodb-mcp-server",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/mongodb-js/mongodb-mcp-server"
+ },
+ {
+  "reg": "npm",
+  "pkg": "@sentry/mcp-server",
+  "resource_id": "kd:res:mcp:io.github.getsentry/sentry-mcp",
+  "registry_name": "io.github.getsentry/sentry-mcp",
+  "args": [],
+  "required_env": [
+   "SENTRY_ACCESS_TOKEN"
+  ],
+  "repo": "https://github.com/getsentry/sentry-mcp"
+ },
+ {
+  "reg": "npm",
+  "pkg": "repomix",
+  "resource_id": "kd:res:github:yamadashy/repomix",
+  "registry_name": "io.github.yamadashy/repomix",
+  "args": [
+   "--mcp"
+  ],
+  "required_env": [],
+  "repo": "https://github.com/yamadashy/repomix"
+ },
+ {
+  "reg": "pypi",
+  "pkg": "llm-sandbox",
+  "resource_id": "kd:res:github:vndee/llm-sandbox",
+  "registry_name": "io.github.vndee/llm-sandbox",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/vndee/llm-sandbox"
+ },
+ {
+  "reg": "npm",
+  "pkg": "figma-developer-mcp",
+  "resource_id": "kd:res:github:GLips/Figma-Context-MCP",
+  "registry_name": "io.github.GLips/Figma-Context-MCP",
+  "args": [
+   "--stdio"
+  ],
+  "required_env": [
+   "FIGMA_API_KEY"
+  ],
+  "repo": "https://github.com/GLips/Figma-Context-MCP"
+ },
+ {
+  "reg": "npm",
+  "pkg": "rea-agents",
+  "resource_id": "kd:res:github:morluto/rea",
+  "registry_name": "io.github.morluto/rea",
+  "args": [
+   "mcp"
+  ],
+  "required_env": [],
+  "repo": "https://github.com/morluto/rea"
+ },
+ {
+  "reg": "npm",
+  "pkg": "@supabase/mcp-server-supabase",
+  "resource_id": "kd:res:mcp:com.supabase/mcp",
+  "registry_name": "com.supabase/mcp",
+  "args": [],
+  "required_env": [
+   "SUPABASE_ACCESS_TOKEN"
+  ],
+  "repo": "https://github.com/supabase/mcp"
+ },
+ {
+  "reg": "npm",
+  "pkg": "@hostinger/mcp",
+  "resource_id": "kd:res:github:hostinger/api-mcp-server",
+  "registry_name": "io.github.hostinger/hostinger-api-mcp",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/hostinger/api-mcp-server"
+ },
+ {
+  "reg": "pypi",
+  "pkg": "mcp-server-appwrite",
+  "resource_id": "kd:res:github:appwrite/mcp",
+  "registry_name": "io.github.appwrite/mcp",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/appwrite/mcp"
+ },
+ {
+  "reg": "pypi",
+  "pkg": "excel-mcp-server",
+  "resource_id": "kd:res:github:haris-musa/excel-mcp-server",
+  "registry_name": "io.github.haris-musa/excel-mcp-server",
+  "args": [
+   "stdio"
+  ],
+  "required_env": [],
+  "repo": "https://github.com/haris-musa/excel-mcp-server"
+ },
+ {
+  "reg": "pypi",
+  "pkg": "mcp-server-git",
+  "resource_id": "kd:res:github:modelcontextprotocol/servers",
+  "registry_name": null,
+  "args": [
+   "--repository",
+   "$WORK/repo"
+  ],
+  "required_env": [],
+  "repo": null,
+  "git_repo": true
+ },
+ {
+  "reg": "npm",
+  "pkg": "@mobilenext/mobile-mcp",
+  "resource_id": "kd:res:github:mobile-next/mobile-mcp",
+  "registry_name": "io.github.mobile-next/mobile-mcp",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/mobile-next/mobile-mcp"
+ },
+ {
+  "reg": "npm",
+  "pkg": "@softeria/ms-365-mcp-server",
+  "resource_id": "kd:res:github:Softeria/ms-365-mcp-server",
+  "registry_name": "io.github.Softeria/ms-365-mcp-server",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/Softeria/ms-365-mcp-server"
+ },
+ {
+  "reg": "pypi",
+  "pkg": "ha-mcp",
+  "resource_id": "kd:res:github:homeassistant-ai/ha-mcp",
+  "registry_name": "io.github.homeassistant-ai/ha-mcp",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/homeassistant-ai/ha-mcp.git"
+ },
+ {
+  "reg": "npm",
+  "pkg": "@bytebase/dbhub",
+  "resource_id": "kd:res:github:bytebase/dbhub",
+  "registry_name": "io.github.bytebase/dbhub",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/bytebase/dbhub"
+ },
+ {
+  "reg": "npm",
+  "pkg": "@sveltejs/mcp",
+  "resource_id": "kd:res:mcp:dev.svelte/mcp",
+  "registry_name": "dev.svelte/mcp",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/sveltejs/ai-tools"
+ },
+ {
+  "reg": "pypi",
+  "pkg": "serena-agent",
+  "resource_id": "kd:res:github:oraios/serena",
+  "registry_name": "io.github.oraios/serena",
+  "args": [
+   "start-mcp-server"
+  ],
+  "required_env": [],
+  "repo": "https://github.com/oraios/serena",
+  "exe": "serena"
+ },
+ {
+  "reg": "npm",
+  "pkg": "@palisadeemail/mcp",
+  "resource_id": "kd:res:github:palisadeemail/palisade-mcp",
+  "registry_name": "email.palisade/palisade",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/palisadeemail/palisade-mcp"
+ },
+ {
+  "reg": "pypi",
+  "pkg": "bernstein",
+  "resource_id": "kd:res:github:sipyourdrink-ltd/bernstein",
+  "registry_name": "io.github.chernistry/bernstein",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/chernistry/bernstein"
+ },
+ {
+  "reg": "npm",
+  "pkg": "@browserstack/mcp-server",
+  "resource_id": "kd:res:github:browserstack/mcp-server",
+  "registry_name": "io.github.browserstack/mcp-server",
+  "args": [],
+  "required_env": [
+   "BROWSERSTACK_USERNAME",
+   "BROWSERSTACK_ACCESS_KEY"
+  ],
+  "repo": "https://github.com/browserstack/mcp-server"
+ },
+ {
+  "reg": "npm",
+  "pkg": "@cloudbase/cloudbase-mcp",
+  "resource_id": "kd:res:mcp:io.github.TencentCloudBase/cloudbase-mcp",
+  "registry_name": "io.github.TencentCloudBase/cloudbase-mcp",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/TencentCloudBase/CloudBase-AI-Toolkit"
+ },
+ {
+  "reg": "npm",
+  "pkg": "@brave/brave-search-mcp-server",
+  "resource_id": "kd:res:github:brave/brave-search-mcp-server",
+  "registry_name": "io.github.brave/brave-search-mcp-server",
+  "args": [],
+  "required_env": [
+   "BRAVE_API_KEY"
+  ],
+  "repo": "https://github.com/brave/brave-search-mcp-server"
+ },
+ {
+  "reg": "npm",
+  "pkg": "@cyanheads/mcp-ts-core",
+  "resource_id": "kd:res:github:cyanheads/mcp-ts-core",
+  "registry_name": "io.github.cyanheads/mcp-ts-core",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/cyanheads/mcp-ts-core"
+ },
+ {
+  "reg": "pypi",
+  "pkg": "arxiv-mcp-server",
+  "resource_id": "kd:res:github:blazickjp/arxiv-mcp-server",
+  "registry_name": "io.github.blazickjp/arxiv-mcp-server",
+  "args": [
+   "--storage-path",
+   "$WORK/papers"
+  ],
+  "required_env": [],
+  "repo": "https://github.com/blazickjp/arxiv-mcp-server",
+  "make_dirs": [
+   "papers"
+  ]
+ },
+ {
+  "reg": "npm",
+  "pkg": "comfyui-mcp",
+  "resource_id": "kd:res:github:artokun/comfyui-mcp",
+  "registry_name": "io.github.artokun/comfyui-mcp",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/artokun/comfyui-mcp"
+ },
+ {
+  "reg": "npm",
+  "pkg": "tavily-mcp",
+  "resource_id": "kd:res:github:tavily-ai/tavily-mcp",
+  "registry_name": "io.github.tavily-ai/tavily-mcp",
+  "args": [],
+  "required_env": [
+   "TAVILY_API_KEY"
+  ],
+  "repo": "https://github.com/tavily-ai/tavily-mcp"
+ },
+ {
+  "reg": "pypi",
+  "pkg": "skylos",
+  "resource_id": "kd:res:github:duriantaco/skylos",
+  "registry_name": "io.github.duriantaco/skylos",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/duriantaco/skylos"
+ },
+ {
+  "reg": "pypi",
+  "pkg": "windows-mcp",
+  "resource_id": "kd:res:github:CursorTouch/Windows-MCP",
+  "registry_name": "io.github.CursorTouch/Windows-MCP",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/CursorTouch/Windows-MCP"
+ },
+ {
+  "reg": "pypi",
+  "pkg": "tooluniverse",
+  "resource_id": "kd:res:github:mims-harvard/ToolUniverse",
+  "registry_name": "io.github.mims-harvard/tooluniverse",
+  "args": [
+   "--compact-mode"
+  ],
+  "required_env": [],
+  "repo": "https://github.com/mims-harvard/ToolUniverse",
+  "exe": "tooluniverse-smcp-stdio"
+ },
+ {
+  "reg": "pypi",
+  "pkg": "jcodemunch-mcp",
+  "resource_id": "kd:res:github:jgravelle/jcodemunch-mcp",
+  "registry_name": "io.github.jgravelle/jcodemunch-mcp",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/jgravelle/jcodemunch-mcp"
+ },
+ {
+  "reg": "pypi",
+  "pkg": "yandex-cli",
+  "resource_id": "kd:res:github:bim-ba/ycli",
+  "registry_name": "io.github.bim-ba/ycli",
+  "args": [
+   "mcp",
+   "start"
+  ],
+  "required_env": [
+   "YANDEX_ID_OAUTH_TOKEN",
+   "YANDEX_ID_ORGANIZATION_ID"
+  ],
+  "repo": "https://github.com/bim-ba/ycli"
+ },
+ {
+  "reg": "npm",
+  "pkg": "@rigour-labs/mcp",
+  "resource_id": "kd:res:github:rigour-labs/rigour",
+  "registry_name": "io.github.rigour-labs/rigour",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/rigour-labs/rigour"
+ },
+ {
+  "reg": "pypi",
+  "pkg": "hol-guard",
+  "resource_id": "kd:res:github:hashgraph-online/hol-guard",
+  "registry_name": "io.github.hashgraph-online/hol-guard",
+  "args": [
+   "mcp",
+   "serve",
+   "--stdio"
+  ],
+  "required_env": [],
+  "repo": "https://github.com/hashgraph-online/hol-guard"
+ },
+ {
+  "reg": "npm",
+  "pkg": "semiotic",
+  "resource_id": "kd:res:github:nteract/semiotic",
+  "registry_name": "io.github.nteract/semiotic",
+  "args": [],
+  "required_env": [],
+  "repo": "https://github.com/nteract/semiotic"
+ }
+]

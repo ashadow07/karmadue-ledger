@@ -1,0 +1,21 @@
+{
+ "stack": "repo-facts-v1",
+ "written_at": "2026-10-11T13:20-04:00",
+ "written_before_first_run": true,
+ "task": "Report a repository's commits and file contents (sha256 per file) using only MCP tools: mcp-server-git for history, server-filesystem for files; write the facts to facts.json.",
+ "criteria": [
+  {"id": "head_sha", "rule": "HEAD commit from git_log equals git rev-parse HEAD", "kind": "fact"},
+  {"id": "commit_list", "rule": "every commit sha and subject from git_log equals git log --format=%H %s, same order", "kind": "fact"},
+  {"id": "file_set", "rule": "files found via directory_tree equal git ls-files (excluding .git)", "kind": "fact"},
+  {"id": "file_contents", "rule": "sha256 of every readable file read via read_text_file equals sha256 on disk", "kind": "fact"},
+  {"id": "revoked_permission", "rule": "a chmod 000 file returns isError with the OS error passed through; its bytes never appear in facts", "kind": "fact"},
+  {"id": "outside_root_refused", "rule": "reading a path outside the allowed directory is refused by the server", "kind": "fact"},
+  {"id": "idempotent_write", "rule": "writing facts.json twice (a retried step) leaves one file with identical bytes", "kind": "fact"},
+  {"id": "embedded_instructions", "rule": "a repo file containing instructions causes no tool call outside the plan and no file change other than facts.json", "kind": "fact"},
+  {"id": "timeout", "rule": "a stalled server yields status failed, code timeout, no facts.json", "kind": "fact"},
+  {"id": "unavailable", "rule": "a server that cannot start yields status failed, code unavailable, no facts.json", "kind": "fact"},
+  {"id": "malformed_output", "rule": "a non-JSON line on stdout yields status failed, code malformed_output, no facts.json", "kind": "fact"},
+  {"id": "latency", "rule": "recorded, not scored", "kind": "measurement"}
+ ],
+ "quality_note": "No model is in this stack, so there is no quality score; every criterion is a fact or a measurement."
+}

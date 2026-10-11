@@ -1,0 +1,196 @@
+name: reference-runs
+# Daily re-run of KarmaDue's reference runs (top-50 MCP servers, 3 runtime setups) and the 3 reference stacks on GitHub-hosted
+# Ubuntu runners. Raw logs and JSON results are committed to results/<date>/run-<id>/. Results are posted to KarmaDue's
+# runner-ingest route, signed with KD_RUNNER_KEY; only the final ingest job can read that secret, and it runs no tested code.
+# Labeled "KarmaDue test runner (GitHub Actions, public logs)" with this run's URL. Servers that need credentials are skipped.
+on:
+  schedule:
+    - cron: "23 7 * * *"   # 07:23 UTC daily, after daily-anchor
+  workflow_dispatch: {}
+permissions:
+  contents: read
+concurrency:
+  group: reference-runs
+  cancel-in-progress: false
+env:
+  RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+  KD_HOST_LABEL: "GitHub Actions ubuntu-24.04 runner (4 vCPU, no GPU)"
+
+jobs:
+  refs:
+    name: refs (${{ matrix.env }}, node ${{ matrix.node }}, python ${{ matrix.python }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { env: ref-a, node: "20", python: "3.13" }
+          - { env: ref-b, node: "22", python: "3.12" }
+          - { env: ref-c, node: "24", python: "3.11" }
+    steps:
+      - uses: actions/checkout@v4
+        with: { persist-credentials: false }
+      - uses: actions/setup-node@v4
+        with: { node-version: "${{ matrix.node }}" }
+      - uses: actions/setup-python@v5
+        with: { python-version: "${{ matrix.python }}" }
+      - uses: astral-sh/setup-uv@v6
+        with: { enable-cache: false }
+      - name: Week key
+        run: echo "WEEK=$(date -u +%G-%V)" >> "$GITHUB_ENV"
+      - uses: actions/cache@v4
+        with:
+          path: ~/kdcache
+          key: refs-${{ matrix.env }}-${{ hashFiles('runner/tools50.json') }}-${{ env.WEEK }}
+          restore-keys: refs-${{ matrix.env }}-
+      - name: Run (initialize + tools/list only; no tool is called)
+        env:
+          KD_GH: "1"
+          KD_ENV: ${{ matrix.env }}
+          KD_PY: ${{ matrix.python }}
+          KD_RUN_CACHE: /home/runner/kdcache
+          KD_TIMEOUT: "120"
+        run: |
+          mkdir -p out
+          python3 runner/run_reference.py runner/tools50.json out/refs-${{ matrix.env }}.json --skip-credentials --jobs 8 2>&1 | tee out/refs-${{ matrix.env }}.log
+          python3 runner/publish_refs.py out/refs-${{ matrix.env }}.json.jsonl out/body-refs-${{ matrix.env }}.json "$RUN_URL" "refs-${{ matrix.env }}"
+          python3 - <<'PY'
+          import json, collections
+          rs = [json.loads(l) for l in open("out/refs-${{ matrix.env }}.json.jsonl")]
+          c = collections.Counter(r["result"] for r in rs)
+          print(f"${{ matrix.env }}: {len(rs)} runs, {c['worked']} worked, {c['failed']} failed")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: "refs-${{ matrix.env }}", path: out/, retention-days: 14 }
+
+  stacks-mcp:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: { persist-credentials: false }
+      - uses: actions/setup-node@v4
+        with: { node-version: "22" }
+      - uses: actions/setup-python@v5
+        id: py
+        with: { python-version: "3.13" }
+      - uses: astral-sh/setup-uv@v6
+        with: { enable-cache: false }
+      - name: Sandbox (bubblewrap; Ubuntu 24.04 needs unprivileged user namespaces switched on)
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq bubblewrap
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          echo "KD_BWRAP_VERSION=$(bwrap --version | awk '{print $2}')" >> "$GITHUB_ENV"
+          sudo mkdir -p /opt/kdcache && sudo chown "$USER" /opt/kdcache
+      - name: Warm caches (online), then the stack runs offline with no network
+        run: |
+          export npm_config_cache=/opt/kdcache/ref-b/npm UV_CACHE_DIR=/opt/kdcache/uv
+          for p in @modelcontextprotocol/server-filesystem@1.0.0 @modelcontextprotocol/server-memory@1.0.0; do timeout 90 npx -y "$p" /tmp </dev/null >/dev/null 2>&1 || true; done
+          timeout 120 uvx --python "${{ steps.py.outputs.python-path }}" mcp-server-git==2026.10.10 --help >/dev/null 2>&1 || true
+      - name: Run repo-facts-v1 and memory-roundtrip-v1
+        env:
+          KD_RT: /opt/kdcache/rt
+          KD_RUN_CACHE: /opt/kdcache
+          KD_UV_PYTHON: ${{ steps.py.outputs.python-path }}
+        run: |
+          export KD_NODE_BIN="$(dirname "$(which node)")" KD_EXTRA_PATH="$(dirname "$(which uvx)")" KD_NODE_MM="$(node -v | sed 's/^v//' | cut -d. -f1,2)"
+          mkdir -p out/stacks
+          for s in repo_facts memory_roundtrip; do
+            python3 runner/stacks/mcp/$s.py out/stacks/$s.json 2>&1 | tee out/stacks/$s.log || true
+            [ -f out/stacks/$s.json ] && python3 runner/stacks/mcp/publish_mcp_stack.py out/stacks/$s.json out/body-stack-$s.json "$RUN_URL" "stack-${s//_/-}"
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: stacks-mcp, path: out/, retention-days: 14 }
+
+  stacks-transcription:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with: { persist-credentials: false }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13" }
+      - name: System packages and sandbox
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          echo "KD_FFMPEG_VERSION=$(dpkg-query -W -f='${Version}' ffmpeg)" >> "$GITHUB_ENV"
+          echo "KD_UNSHARE_VERSION=util-linux $(dpkg-query -W -f='${Version}' util-linux | cut -d- -f1)" >> "$GITHUB_ENV"
+      - uses: actions/cache@v4
+        with:
+          path: ~/kdwork/models
+          key: tx-models-${{ hashFiles('runner/fetch_models.sh') }}
+      - uses: actions/cache@v4
+        with:
+          path: ~/kdwork/venv
+          key: tx-venv-py313-${{ hashFiles('runner/stacks/transcription/components.lock.json') }}-v1
+      - name: Models (SHA-256 checked)
+        run: runner/fetch_models.sh ~/kdwork/models
+      - name: Python environment (pinned to components.lock)
+        run: |
+          W=~/kdwork
+          [ -x $W/venv/bin/python ] || python3 -m venv $W/venv
+          $W/venv/bin/pip install -q pywhispercpp==1.5.1 sherpa-onnx==1.13.8 onnxruntime==1.31.0 numpy==2.5.4 piper-tts==1.8.0 llama-cpp-python==0.3.36
+          $W/venv/bin/pip freeze > /tmp/freeze.txt
+      - name: Run local-transcription-v1
+        env:
+          KD_PILOT: ${{ github.workspace }}/runner/stacks/transcription/pilot
+          KD_THREADS: "4"
+          KD_TIMING_NOTE: "GitHub Actions ubuntu-24.04 runner, 4 vCPU; wall times vary between runs."
+        run: |
+          W=~/kdwork; export KD_WORK=$W; mkdir -p out/stacks
+          cp /tmp/freeze.txt out/stacks/transcription-pip-freeze.txt
+          $W/venv/bin/python runner/stacks/transcription/make_samples.py $W/models $W/samples 2>&1 | tee out/stacks/transcription.log
+          $W/venv/bin/python runner/stacks/transcription/run_tests.py $W out/stacks/transcription-test-record.json 2>&1 | tee -a out/stacks/transcription.log || true
+          if [ -f out/stacks/transcription-test-record.json ]; then
+            $W/venv/bin/python runner/stacks/transcription/finalize_record.py $W out/stacks/transcription-test-record.json out/stacks/transcription.json 2>&1 | tee -a out/stacks/transcription.log
+            python3 runner/stacks/transcription/publish_stack.py out/stacks/transcription.json out/body-stack-transcription.json "$RUN_URL" stack-transcription
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: stacks-transcription, path: out/, retention-days: 14 }
+
+  ingest:
+    needs: [refs, stacks-mcp, stacks-transcription]
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { path: /tmp/art }
+      - name: Post signed results to KarmaDue
+        env:
+          KD_RUNNER_KEY: ${{ secrets.KD_RUNNER_KEY }}
+        run: |
+          D=results/$(date -u +%F)/run-${{ github.run_id }}; mkdir -p "$D/ingest"
+          for a in /tmp/art/*/; do n=$(basename "$a"); mkdir -p "$D/$n"; cp -r "$a"/. "$D/$n/"; done
+          for b in $(find "$D" -name 'body-*.json' | sort); do
+            n=$(basename "$b" .json); n=${n#body-}
+            runner/post_ingest.sh "$b" > "$D/ingest/$n.json" 2>&1 || echo "post failed for $n" | tee -a "$D/ingest/errors.txt"
+            echo "$n: $(cat "$D/ingest/$n.json")" | cut -c1-400
+          done
+          python3 - "$D" <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json, glob, os, sys, collections
+          d = sys.argv[1]; print(f"## Reference runs\n\nRun: {os.environ['RUN_URL']}\n")
+          for f in sorted(glob.glob(f"{d}/refs-*/refs-*.json.jsonl")):
+              rs = [json.loads(l) for l in open(f)]; c = collections.Counter(r["result"] for r in rs)
+              print(f"- {os.path.basename(f).split('.')[0]}: {len(rs)} runs, {c['worked']} worked, {c['failed']} failed")
+          for f in sorted(glob.glob(f"{d}/ingest/*.json")):
+              print(f"- ingest {os.path.basename(f)[:-5]}: {open(f).read()[:300]}")
+          PY
+          # full tool schemas stay in the jsonl; the bodies are what was posted
+          echo "$D" > /tmp/dir
+      - name: Commit results
+        run: |
+          D=$(cat /tmp/dir)
+          git config user.name "karmadue-ledger-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results
+          git commit -qm "reference runs $(date -u +%F) (run ${{ github.run_id }})" || exit 0
+          for i in 1 2 3; do git pull -q --rebase && git push -q && break; sleep 5; done

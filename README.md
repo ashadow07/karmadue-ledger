@@ -59,3 +59,17 @@ signed log; the Bitcoin anchor only proves the log head existed by a given block
 
 An anchor proves the log had this head on this date and was not rewritten afterwards. It does not prove any event is true, and it
 says nothing about content that never entered the log.
+
+## Daily reference runs (GitHub Actions, public logs)
+
+`.github/workflows/reference-runs.yml` re-runs KarmaDue's reference runs every day at 07:23 UTC (and on demand): the top-50 MCP
+servers in `runner/tools50.json` are started in three runtime setups (Node 20 / Python 3.13, Node 22 / Python 3.12, Node 24 /
+Python 3.11) and sent only `initialize` and `tools/list` (no tool is called); servers that need credentials are skipped. The three
+reference stacks (`repo-facts-v1`, `memory-roundtrip-v1`, `local-transcription-v1`) run against their written acceptance criteria.
+Raw logs and JSON results are committed to `results/<date>/run-<id>/`.
+
+Results are posted to KarmaDue's `runner-ingest` route, signed with Ed25519 (`runner/post_ingest.sh`; the private key is the
+`KD_RUNNER_KEY` Actions secret, readable only by the final job, which runs no tested code). KarmaDue labels them
+"KarmaDue test runner (GitHub Actions, public logs)" with the run URL. Runs are appended, never overwritten; a run whose result
+or tool list differs from the previous one is marked needs re-check, and a stack whose verdict or components change is set to
+needs re-check with the new record kept in history until reviewed.
