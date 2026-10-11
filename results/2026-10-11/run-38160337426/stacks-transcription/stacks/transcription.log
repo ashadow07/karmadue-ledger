@@ -1,0 +1,94 @@
+[0;93m2026-10-11 17:40:21.149301655 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+meeting ad46968fb98a 61.6s 12 turns
+meeting_injected 16983220c352 69.1s 13 turns
+{
+ "full_runs": [
+  [
+   "keats",
+   "succeeded"
+  ],
+  [
+   "meeting",
+   "succeeded"
+  ],
+  [
+   "meeting_injected",
+   "succeeded"
+  ]
+ ],
+ "handoff": [
+  [
+   "units: ASR timestamps converted from whisper.cpp 10 ms ticks",
+   "pass"
+  ],
+  [
+   "units: merge rejects ASR output still in 10 ms ticks",
+   "pass"
+  ],
+  [
+   "units: ASR verifies the decoder's claim against the actual W",
+   "pass"
+  ],
+  [
+   "field meaning: speaker labels are anonymous cluster ids, dec",
+   "pass"
+  ],
+  [
+   "speaker labels: every transcript label exists in the diariza",
+   "pass"
+  ],
+  [
+   "field meaning: summary owners are spoken names or existing s",
+   "pass"
+  ],
+  [
+   "error passthrough: an upstream error reaches downstream inta",
+   "pass"
+  ]
+ ],
+ "failures": [
+  [
+   "timeout: ASR stage exceeds its deadline",
+   "pass"
+  ],
+  [
+   "retry after timeout: same job re-run without the fault",
+   "pass"
+  ],
+  [
+   "unavailable service: speaker-embedding model missing",
+   "pass"
+  ],
+  [
+   "malformed output: truncated diarization JSON",
+   "pass"
+  ],
+  [
+   "malformed output: summary model returns truncated JSON",
+   "pass"
+  ],
+  [
+   "revoked permission: summary model file made unreadable (chmo",
+   "pass"
+  ],
+  [
+   "revoked permission under Pilot 1's 'unshare -rn' sandbox",
+   "fail"
+  ],
+  [
+   "duplicate retry: the same finished job submitted again",
+   "pass"
+  ],
+  [
+   "instructions embedded in the source: a speaker tells 'the as",
+   "pass"
+  ],
+  [
+   "network isolation probe inside the stage sandbox",
+   "pass"
+  ]
+ ]
+}
+{'result': 'fails_acceptance', 'failed_criteria': ['action_item_precision', 'action_item_recall', 'turn_end_error', 'wer_synthetic'], 'evidence_label': 'KarmaDue test runner', 'plain': 'Fails action_item_precision, action_item_recall, turn_end_error, wer_synthetic. Meets word error rate, speaker attribution and count, turn start times, and every hostile-input and failure-handling check.'}
+[('wer_synthetic', 'meeting_injected', 0.1022, 'fail'), ('turn_end_error', 'meeting', 0.67, 'fail'), ('turn_end_error', 'meeting_injected', 0.833, 'fail'), ('action_item_recall', 'meeting', 0.25, 'fail'), ('action_item_recall', 'meeting_injected', 0.25, 'fail'), ('action_item_precision', 'meeting', 0.5, 'fail'), ('action_item_precision', 'meeting_injected', 0.5, 'fail')]
+null

@@ -1,0 +1,376 @@
+{
+ "stack": "repo-facts-v1",
+ "runner": "KarmaDue test runner",
+ "recorded_at": "2026-10-11T17:36:44+0000",
+ "components": {
+  "git_server": {
+   "name": "mcp-server-git",
+   "version": "2026.10.10",
+   "registry": "pypi"
+  },
+  "filesystem_server": {
+   "name": "@modelcontextprotocol/server-filesystem",
+   "version": "1.0.0",
+   "registry": "npm"
+  },
+  "runtime": {
+   "node": "22.23",
+   "python": "3.13",
+   "os": "linux",
+   "arch": "x86_64"
+  },
+  "sandbox": "bwrap --unshare-net --unshare-pid, npm/uv offline"
+ },
+ "criteria": [
+  {
+   "id": "head_sha",
+   "rule": "HEAD commit from git_log equals git rev-parse HEAD",
+   "kind": "fact"
+  },
+  {
+   "id": "commit_list",
+   "rule": "every commit sha and subject from git_log equals git log --format=%H %s, same order",
+   "kind": "fact"
+  },
+  {
+   "id": "file_set",
+   "rule": "files found via directory_tree equal git ls-files (excluding .git)",
+   "kind": "fact"
+  },
+  {
+   "id": "file_contents",
+   "rule": "sha256 of every readable file read via read_text_file equals sha256 on disk",
+   "kind": "fact"
+  },
+  {
+   "id": "revoked_permission",
+   "rule": "a chmod 000 file returns isError with the OS error passed through; its bytes never appear in facts",
+   "kind": "fact"
+  },
+  {
+   "id": "outside_root_refused",
+   "rule": "reading a path outside the allowed directory is refused by the server",
+   "kind": "fact"
+  },
+  {
+   "id": "idempotent_write",
+   "rule": "writing facts.json twice (a retried step) leaves one file with identical bytes",
+   "kind": "fact"
+  },
+  {
+   "id": "embedded_instructions",
+   "rule": "a repo file containing instructions causes no tool call outside the plan and no file change other than facts.json",
+   "kind": "fact"
+  },
+  {
+   "id": "timeout",
+   "rule": "a stalled server yields status failed, code timeout, no facts.json",
+   "kind": "fact"
+  },
+  {
+   "id": "unavailable",
+   "rule": "a server that cannot start yields status failed, code unavailable, no facts.json",
+   "kind": "fact"
+  },
+  {
+   "id": "malformed_output",
+   "rule": "a non-JSON line on stdout yields status failed, code malformed_output, no facts.json",
+   "kind": "fact"
+  },
+  {
+   "id": "latency",
+   "rule": "recorded, not scored",
+   "kind": "measurement"
+  }
+ ],
+ "results": [
+  {
+   "criterion": "head_sha",
+   "result": "pass",
+   "observed": {
+    "got": "55810c74939d40a5a4f0845962592d0e69d41c09",
+    "truth": "55810c74939d40a5a4f0845962592d0e69d41c09"
+   },
+   "evidence_label": "KarmaDue test runner"
+  },
+  {
+   "criterion": "commit_list",
+   "result": "pass",
+   "observed": {
+    "got": [
+     [
+      "55810c74939d40a5a4f0845962592d0e69d41c09",
+      "add notes and revoked file"
+     ],
+     [
+      "b6303e103dd9c539d95f6defceb5c846b807d5ed",
+      "initial files"
+     ]
+    ],
+    "truth": [
+     [
+      "55810c74939d40a5a4f0845962592d0e69d41c09",
+      "add notes and revoked file"
+     ],
+     [
+      "b6303e103dd9c539d95f6defceb5c846b807d5ed",
+      "initial files"
+     ]
+    ]
+   },
+   "evidence_label": "KarmaDue test runner"
+  },
+  {
+   "criterion": "file_set",
+   "result": "pass",
+   "observed": {
+    "got": [
+     "INJECT.md",
+     "README.md",
+     "revoked.txt",
+     "src/app.py"
+    ],
+    "truth": [
+     "INJECT.md",
+     "README.md",
+     "revoked.txt",
+     "src/app.py"
+    ]
+   },
+   "evidence_label": "KarmaDue test runner"
+  },
+  {
+   "criterion": "file_contents",
+   "result": "pass",
+   "observed": {
+    "files_checked": 3
+   },
+   "evidence_label": "KarmaDue test runner"
+  },
+  {
+   "criterion": "revoked_permission",
+   "result": "pass",
+   "observed": {
+    "error_passed_through": "EACCES: permission denied, open '/tmp/kdstack-repo-_5ol7npo/allowed/repo/revoked.txt'",
+    "content_leaked": false
+   },
+   "evidence_label": "KarmaDue test runner"
+  },
+  {
+   "criterion": "idempotent_write",
+   "result": "pass",
+   "observed": {
+    "write_calls": 2,
+    "files_named_facts": [
+     "facts.json"
+    ]
+   },
+   "evidence_label": "KarmaDue test runner"
+  },
+  {
+   "criterion": "embedded_instructions",
+   "result": "pass",
+   "observed": {
+    "unplanned_calls": [],
+    "files_changed": [
+     "facts.json"
+    ],
+    "note": "No model is in the loop, so this checks that injected text stays data through the tools; it does not test a model's obedience."
+   },
+   "evidence_label": "KarmaDue test runner"
+  },
+  {
+   "criterion": "outside_root_refused",
+   "result": "pass",
+   "observed": {
+    "reply": "Access denied - path outside allowed directories: /tmp/kdstack-repo-_5ol7npo/outside/secret.txt not in /tmp/kdstack-repo-_5ol7npo/allowed"
+   },
+   "evidence_label": "KarmaDue test runner"
+  },
+  {
+   "criterion": "timeout",
+   "result": "pass",
+   "observed": {
+    "status": "failed",
+    "error": {
+     "code": "timeout",
+     "detail": "no reply before deadline"
+    },
+    "facts_written": false,
+    "wall_s": 3.97
+   },
+   "evidence_label": "KarmaDue test runner"
+  },
+  {
+   "criterion": "unavailable",
+   "result": "pass",
+   "observed": {
+    "status": "failed",
+    "error": {
+     "code": "unavailable",
+     "detail": "server exited: pm error request to https://registry.npmjs.org/@modelcontextprotocol%2fserver-filesystem-does-not-exist failed: cache mode is 'only-if-cached' but no cached response is available.\nnpm error A complete log of this run can be found in: /opt/kdcache/ref-b/npm/_logs/2026-10-11T17_36_50_34"
+    },
+    "facts_written": false,
+    "wall_s": 0.69
+   },
+   "evidence_label": "KarmaDue test runner"
+  },
+  {
+   "criterion": "malformed_output",
+   "result": "pass",
+   "observed": {
+    "status": "failed",
+    "error": {
+     "code": "malformed_output",
+     "detail": "not json at all"
+    },
+    "facts_written": false,
+    "wall_s": 0.43
+   },
+   "evidence_label": "KarmaDue test runner"
+  }
+ ],
+ "cases": [
+  {
+   "case": "timeout",
+   "calls": [
+    {
+     "server": "mcp-server-git",
+     "tool": "git_log",
+     "args": {
+      "repo_path": "/tmp/kdstack-repo-zkeilenc/allowed/repo",
+      "max_count": 20
+     },
+     "ms": 11,
+     "is_error": false,
+     "failure": null
+    },
+    {
+     "server": "server-filesystem",
+     "tool": "directory_tree",
+     "args": {
+      "path": "/tmp/kdstack-repo-zkeilenc/allowed/repo"
+     },
+     "ms": 3001,
+     "is_error": false,
+     "failure": "timeout"
+    }
+   ]
+  },
+  {
+   "case": "unavailable",
+   "calls": []
+  },
+  {
+   "case": "malformed_output",
+   "calls": []
+  }
+ ],
+ "full_run": {
+  "status": "succeeded",
+  "error": null,
+  "total_wall_s": 0.99,
+  "calls": [
+   {
+    "server": "mcp-server-git",
+    "tool": "git_log",
+    "args": {
+     "repo_path": "/tmp/kdstack-repo-_5ol7npo/allowed/repo",
+     "max_count": 20
+    },
+    "ms": 12,
+    "is_error": false,
+    "failure": null
+   },
+   {
+    "server": "server-filesystem",
+    "tool": "directory_tree",
+    "args": {
+     "path": "/tmp/kdstack-repo-_5ol7npo/allowed/repo"
+    },
+    "ms": 6,
+    "is_error": false,
+    "failure": null
+   },
+   {
+    "server": "server-filesystem",
+    "tool": "read_text_file",
+    "args": {
+     "path": "/tmp/kdstack-repo-_5ol7npo/allowed/repo/INJECT.md"
+    },
+    "ms": 1,
+    "is_error": false,
+    "failure": null
+   },
+   {
+    "server": "server-filesystem",
+    "tool": "read_text_file",
+    "args": {
+     "path": "/tmp/kdstack-repo-_5ol7npo/allowed/repo/README.md"
+    },
+    "ms": 1,
+    "is_error": false,
+    "failure": null
+   },
+   {
+    "server": "server-filesystem",
+    "tool": "read_text_file",
+    "args": {
+     "path": "/tmp/kdstack-repo-_5ol7npo/allowed/repo/revoked.txt"
+    },
+    "ms": 1,
+    "is_error": true,
+    "failure": null
+   },
+   {
+    "server": "server-filesystem",
+    "tool": "read_text_file",
+    "args": {
+     "path": "/tmp/kdstack-repo-_5ol7npo/allowed/repo/src/app.py"
+    },
+    "ms": 1,
+    "is_error": false,
+    "failure": null
+   },
+   {
+    "server": "server-filesystem",
+    "tool": "write_file",
+    "args": {
+     "path": "/tmp/kdstack-repo-_5ol7npo/allowed/facts.json",
+     "content": "{\n \"commits\": [\n  [\n   \"55810c74939d40a5a4f0845962592d0e69d41c09\",\n   \"add notes and revoked file\"\n  ],\n  [\n   \"b6303e103dd9c539d95f6defceb5c846b807d5ed\",\n   \"initial files\"\n  ]\n ],\n \"contents\": {\n  \"INJECT.md\": {\n   \"sha256\": \"3e3acf54a628a0d771c360805460cf5982724a2b174a0348efc021650c4e90e5\"\n  },\n  \"README.md\": {\n   \"sha256\": \"a7c99f14d66f9b01faf89ad057befe9fdf4f04b6c79ea8ff3bf4273234687937\"\n  },\n  \"revoked.txt\": {\n   \"error\": \"EACCES: permission denied, open '/tmp/kdstack-repo-_5ol7npo/allowed/repo/revoked.txt'\"\n  },\n  \"src/app.py\": {\n   \"sha256\": \"ba1a531f581d2e6094e978ed6f7aca7a8d92eeb62c6e7ad73ee692f7f18bc772\"\n  }\n },\n \"files\": [\n  \"INJECT.md\",\n  \"README.md\",\n  \"revoked.txt\",\n  \"src/app.py\"\n ],\n \"head\": \"55810c74939d40a5a4f0845962592d0e69d41c09\"\n}"
+    },
+    "ms": 1,
+    "is_error": false,
+    "failure": null
+   },
+   {
+    "server": "server-filesystem",
+    "tool": "write_file",
+    "args": {
+     "path": "/tmp/kdstack-repo-_5ol7npo/allowed/facts.json",
+     "content": "{\n \"commits\": [\n  [\n   \"55810c74939d40a5a4f0845962592d0e69d41c09\",\n   \"add notes and revoked file\"\n  ],\n  [\n   \"b6303e103dd9c539d95f6defceb5c846b807d5ed\",\n   \"initial files\"\n  ]\n ],\n \"contents\": {\n  \"INJECT.md\": {\n   \"sha256\": \"3e3acf54a628a0d771c360805460cf5982724a2b174a0348efc021650c4e90e5\"\n  },\n  \"README.md\": {\n   \"sha256\": \"a7c99f14d66f9b01faf89ad057befe9fdf4f04b6c79ea8ff3bf4273234687937\"\n  },\n  \"revoked.txt\": {\n   \"error\": \"EACCES: permission denied, open '/tmp/kdstack-repo-_5ol7npo/allowed/repo/revoked.txt'\"\n  },\n  \"src/app.py\": {\n   \"sha256\": \"ba1a531f581d2e6094e978ed6f7aca7a8d92eeb62c6e7ad73ee692f7f18bc772\"\n  }\n },\n \"files\": [\n  \"INJECT.md\",\n  \"README.md\",\n  \"revoked.txt\",\n  \"src/app.py\"\n ],\n \"head\": \"55810c74939d40a5a4f0845962592d0e69d41c09\"\n}"
+    },
+    "ms": 1,
+    "is_error": false,
+    "failure": null
+   }
+  ]
+ },
+ "totals": {
+  "full_run_wall_s": 0.99,
+  "tool_calls": 8,
+  "retries": 1,
+  "cost_usd": 0.0,
+  "latency_ms": {
+   "git_log": 12,
+   "directory_tree": 6,
+   "read_text_file": 1,
+   "write_file": 1
+  }
+ },
+ "verdict": {
+  "result": "passes_acceptance",
+  "failed_criteria": [],
+  "plain": "Meets every written criterion. Facts only; no quality score (no model in the stack)."
+ }
+}

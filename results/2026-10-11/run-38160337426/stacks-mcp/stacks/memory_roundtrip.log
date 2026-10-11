@@ -1,0 +1,10 @@
+roundtrip_exact pass {"entities": 3, "relations": 2}
+field_meaning pass {"relations": [["Ana", "Launch", "reviews"], ["Ben", "Launch", "writes"]]}
+search pass {"search_budget": ["Ana"]}
+duplicate_retry pass {"entities": 3, "relations": 2, "launch_observations": ["due 2026-10-30", "owner Ana"]}
+embedded_instructions pass {"unplanned_calls": [], "stored_verbatim": true, "note": "No model in the loop: checks the text stays data through the tool."}
+revoked_permission pass {"is_error": true, "reply": "EACCES: permission denied, access '/tmp/kdstack-mem-39ptzc1v/memory.jsonl'", "stored": false}
+malformed_store fail {"is_error": false, "reply": "{\n  \"entities\": [\n    {\n      \"name\": \"Ana\",\n      \"entityType\": \"person\",\n      \"observations\": [\n        \"owns the budget review\",\n        \"speake
+timeout pass {"status": "failed", "code": "timeout"}
+unavailable pass {"status": "failed", "code": "unavailable"}
+{'result': 'fails_acceptance', 'failed_criteria': ['malformed_store'], 'plain': 'Fails malformed_store. Facts only; no quality score.'}

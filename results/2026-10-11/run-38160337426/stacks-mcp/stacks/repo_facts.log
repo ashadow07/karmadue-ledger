@@ -1,0 +1,59 @@
+{
+ "verdict": {
+  "result": "passes_acceptance",
+  "failed_criteria": [],
+  "plain": "Meets every written criterion. Facts only; no quality score (no model in the stack)."
+ },
+ "results": [
+  [
+   "head_sha",
+   "pass"
+  ],
+  [
+   "commit_list",
+   "pass"
+  ],
+  [
+   "file_set",
+   "pass"
+  ],
+  [
+   "file_contents",
+   "pass"
+  ],
+  [
+   "revoked_permission",
+   "pass"
+  ],
+  [
+   "idempotent_write",
+   "pass"
+  ],
+  [
+   "embedded_instructions",
+   "pass"
+  ],
+  [
+   "outside_root_refused",
+   "pass"
+  ],
+  [
+   "timeout",
+   "pass"
+  ],
+  [
+   "unavailable",
+   "pass"
+  ],
+  [
+   "malformed_output",
+   "pass"
+  ]
+ ],
+ "totals": {
+  "full_run_wall_s": 0.99,
+  "tool_calls": 8,
+  "retries": 1,
+  "cost_usd": 0.0
+ }
+}
