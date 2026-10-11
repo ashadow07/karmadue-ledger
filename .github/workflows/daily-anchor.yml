@@ -1,0 +1,43 @@
+name: daily-anchor
+# Fetch KarmaDue's public signed log head once a day, verify it, and commit it. No secrets: the head and the JWKS are public,
+# and the commit uses the workflow's own GITHUB_TOKEN. GitHub's commit time is an independent timestamp for the anchor.
+on:
+  schedule:
+    - cron: "17 6 * * *"   # 06:17 UTC daily (not on the hour)
+  workflow_dispatch: {}
+permissions:
+  contents: write
+jobs:
+  anchor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-pythonZv5
+        with:
+          python-version: "3.12"
+      - run: pip install cryptography==43.0.3
+      - name: Fetch today's head (only hashes, counts, timestamps, signatures)
+        run: |
+          curl -fsS https://ogogoizwsfaduzehkshb.supabase.co/functions/v1/public-api/.well-known/kd-log-head.json -o /tmp/head.json
+          python3 - <<'PY'
+          import json
+          d = json.load(open("/tmp/head.json"))
+          keep = {k: d[k] for k in ("recipe", "anchored_on", "seq", "row_hash", "signed_text", "signature", "key_id")}
+          assert keep["recipe"] == "kd-log-head-v1"
+          open("/tmp/day", "w").write(keep["anchored_on"])
+          open(f"heads/{keep['anchored_on']}.json", "w").write(json.dumps(keep, indent=2) + "\n")
+          PY
+      - name: Verify signature and chain order
+        run: |
+          DAY=$(cat /tmp/day)
+          python3 scripts/verify_head.py "heads/$DAY.json"
+          python3 scripts/check_order.py
+      - name: Commit
+        run: |
+          DAY=$(cat /tmp/day)
+          git config user.name "karmadue-ledger-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "heads/$DAY.json"
+          if git diff --cached --quiet; then echo "No change for $DAY"; exit 0; fi
+          git commit -m "anchor $DAY"
+          git push
