@@ -1,0 +1,9 @@
+{
+  "recipe": "kd-log-head-v1",
+  "anchored_on": "2026-11-10",
+  "seq": 8455,
+  "row_hash": "5619672c1c90fb7f58426db2a7ed86452f1e02fa3f5706f0677fc7746d50c99c",
+  "signed_text": "kd-log-head-v1\n2026-11-10\n8455\n5619672c1c90fb7f58426db2a7ed86452f1e02fa3f5706f0677fc7746d50c99c",
+  "signature": "HefhTZ59v52Y2U2gY_5pQpbZX2g6aT4YWj1qZ2NhXSBCK7ejcbl9IDm8obupT2DjsTl1MWAs8GHYJ4eT0bbcAw",
+  "key_id": "kd-passport-1"
+}
